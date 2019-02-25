@@ -55,20 +55,6 @@ Notes on pandas
 # select rows: you access by index like in lists
 
 
-#The program should process all files from a root directory containing two subdirectories.
-#Has to be able to run different data than the one we are working with. Argparse?
-
-
-#Create a vocabulary (making a list of every word that occurs in every document)
-#Go through and count all the words in every document. Can be made as a dictionary
-#where every word is a key and every word count is a value. Every vector should
-#have every word, even if the vector doesn't contain that word (then it has the
-#count of 0, but the word is still there). The vocabulary doesn't have any 0-counts
-#though because it means that the word appears somewhere in the documents.
-
-#make a top dictionary containing two key-value pairs. The keys are the topic names and the values are other dictionaries.
-#those dictionaries contain key value pairs where the keys are the document names and the values are other dictionaries.
-#those dictionaries contain key value pairs where the keys are the words and the values are the word counts.
 
 #Opening the files, preprocessing the text. Lowercase, strip punctuation.
 def vocabulary_list(directory, m=None): # add arg.foldername in the main when we call this function in the main bc the argument name directory is arbitrary
@@ -91,11 +77,7 @@ def vocabulary_list(directory, m=None): # add arg.foldername in the main when we
     return vocab_list
 
 
-#You will also need to keep track of the topic under which it occurred, and
-#eliminate duplicate vectors (printing to the command line which articles got dropped).
-#The reason for why we want to keep track of where each vector comes from is that
-#we use every vector twice, once for its own topic and once for the other topic.
-#Label every vector with a topic name (dictionary).
+
 def preprocessing_and_labels(directory, m=None):
     """
     Creates a main dictionary with the topic + document name as key and
@@ -125,31 +107,6 @@ def preprocessing_and_labels(directory, m=None):
 
 
 
-#USE PANDAS. The vectors are brics. brics.index = each document.
-#Can txt be converted into csv file? brics = pd.read_csv("path_to_file.csv", index_col = 0)
-#pd.DataFrame(dictionary/brics) = to get the table
-#brics[["word"]] = to get the column (specific word)
-#brics[1:2] = slice, row number 1 (specific document)
-#brics.loc[[document1]] = to select one (or more) vector. iloc = same except with index (not labels).
-
-#Find a way to make each document into an array
-#where the numbers are the word counts. For every word in vocabulary, create an
-#array with the counts from a particular document.
-
-
-# def vocabulary_builder():
-
-#Create a matrix where every word in every document is counted, even if it has
-#the count of 0. This is the vector space. The rows are the documents and the
-#columns are the words. Each document is a vector containing the word counts
-#so document 1 [1,2,3] document 2 [2,0,5] might be two vectors where the
-#first number (column) is the count for the word "and", the second number is
-#the count for the word "is", etc.
-
-#for every document:
-    #count how many times each word from the vocabulary dictionary appears in each document
-    #save into a dictionary, word:word count
-
 def vector_builder(directory, m=None):
     """
     Create a vector or lists of appended values/counts from previously created
@@ -157,7 +114,7 @@ def vector_builder(directory, m=None):
     Every vector (little list) will be converted into an array and then into
     a dataframe from pandas.
     """
-    # this daddy vector list will be later converted into a np.array() which is basically a list of lists
+    # this main vector list will be later converted into a np.array() which is basically a list of lists
     bigdict = preprocessing_and_labels(directory, m) # contains all smaller dictionaries which are each doc
 
     for label in bigdict.keys():
@@ -165,10 +122,7 @@ def vector_builder(directory, m=None):
         for word, count in bigdict[label].items():
             main_vector_list.append(count)
         bigdict[label] = main_vector_list
-    # for every item (list of words in every doc) in main dict:
-        # sort by key (word)
-        # and extract value (count) for every doc (separate lists)
-        # append those lists of values to daddy vector list
+
 
     return bigdict
 
@@ -192,16 +146,11 @@ def matrix_builder(directory, m=None):
 
 
 
-#Calculate the average cosine similarity of each vector of a specific topic
-#compared to every vector of the same topic, averaged over the entire topic.
-#Cosine similarity should be between 0 and 1 between two specific vectors.
-#nested for loop.
+
 
 #def cosine_similarity_same_topic():
 
-#Calculate the average cosine similarity of each vector of a specific topic
-#compared to every vector of the other topic (other folder), averaged over
-#the entire topic.
+
 
 #def consine_similarity_other_topic():
 
