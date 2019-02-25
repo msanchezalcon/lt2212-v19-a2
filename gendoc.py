@@ -128,9 +128,6 @@ def vector_builder(directory, m=None):
 
 
 
-#create a dataframe from the dictionaries?
-#OR convert the dictionaries into vectors and every vector goes into an array
-#then make a dataframe from the array
 def matrix_builder(directory, m=None):
     """
     Convert main_vector_list into an array by calling np.array() and then
