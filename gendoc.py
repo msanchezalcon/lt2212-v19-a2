@@ -149,7 +149,7 @@ def matrix_builder(directory, m=None):
 
 
 
-#def consine_similarity_other_topic():
+#def cosine_similarity_other_topic():
 
 
 #import pdb;pdb.set_trace()
