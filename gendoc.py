@@ -3,7 +3,7 @@ import glob
 import argparse
 import numpy as np
 import pandas as pd
-import re
+import re,nltk
 from sklearn.decomposition import TruncatedSVD
 from sklearn.feature_extraction.text import TfidfTransformer
 
