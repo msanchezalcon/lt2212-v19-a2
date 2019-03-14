@@ -38,7 +38,6 @@ parser.add_argument("first_vectorfile", type=str,
                     help="The name of the input file for the matrix data.")
 parser.add_argument("second_vectorfile", type=str,
                     help="The name of the input file for the matrix data.")
-
 args = parser.parse_args()
 
 # We read the data from both text data files:
@@ -64,10 +63,8 @@ def CS(data1, data2=None):
 
 
 # We run the previous CS function to compute all 4 results: between same topics and between the different ones:
-#1
 first_topic_same = CS(vec_1)
 second_topic_same = CS(vec_2)
-#2
 first_to_second = CS(vec_1, vec_2)
 second_to_first =CS(vec_2, vec_1)
 
@@ -76,11 +73,7 @@ second_to_first =CS(vec_2, vec_1)
 # We print all results:
 print("Reading matrix from {}.".format(args.first_vectorfile))
 print("Reading matrix from {}.".format(args.second_vectorfile))
-
-#
 print("Average cosine similarity within same topic, topic 1: ", first_topic_same)
-
 print("Average cosine similarity within same topic, topic 2: ", second_topic_same)
-
 print("Average cosine similarity to other topic (topic 1 to topic 2): ", first_to_second)
 print("Average cosine similarity to other topic (topic 2 to topic 1): ", second_to_first)
