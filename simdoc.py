@@ -9,11 +9,16 @@ import math
 # in so that we better understand what you're doing when we grade!
 
 # add whatever additional imports you may need here
+parser = argparse.ArgumentParser(description="Compute some similarity statistics.")
+parser.add_argument("vectorfile", type=str,
+                    help="The name of the input  file for the matrix data.")
 
+args = parser.parse_args()
 
+print("Reading matrix from {}.".format(args.vectorfile))
 
 """
-COSINE SIMILARITY (CS)
+COSINE SIMILARITY
 """
 
 #    In part 2 we calculate the average Cosine Similarity (CS) in 4 different functions:
@@ -31,49 +36,165 @@ COSINE SIMILARITY (CS)
 
 
 
-# We add new arguments for whatever two sets of data we choose to compare (for CS purposes).
-# In this assignment each set of data will correspond to the vector files from crude and grain:
-parser = argparse.ArgumentParser(description="Compute some similarity statistics.")
-parser.add_argument("first_vectorfile", type=str,
-                    help="The name of the input file for the matrix data.")
-parser.add_argument("second_vectorfile", type=str,
-                    help="The name of the input file for the matrix data.")
-args = parser.parse_args()
 
-# We read the data from both text data files:
-vec_1 = np.loadtxt(args.first_vectorfile, dtype='i', delimiter=',')
-vec_2 = np.loadtxt(args.second_vectorfile, dtype='i', delimiter=',')
-
-
-def CS(data1, data2=None):
+def dataframe_from_file(vectorfile):
     """
-    Calculates CS of each vector in every topic with those of their same topic and those of a different topic,
-    averaged over all topics.
+    With the outputfile generated from "gendoc.py" we build a dataframe.
     """
-    cs = []
-    for index, v1 in enumerate(data1):
-        if data2 is not None:
-            for v2 in data2:
-                cs.append(cosine_similarity([v1], [v2]))
+    df = pd.read_csv(vectorfile) # argument is path to outputfile
+    drop_df = df.drop(df.columns[0], axis=1)
+    print(df.columns[0])
+    array = np.array(drop_df)
+
+    #cut_df = df.drop("Unnamed: 0", axis=1) # dropping index first column
+    return array
+
+
+def selecting_input_data(vectorfile):
+    """
+    Separating crude files from grain files
+    """
+    crude_files = []
+    grain_files = []
+    together = []
+    df = pd.read_csv(vectorfile)
+    for label in df[df.columns[0]]:
+        together.append(label)
+        if "crude" in label:
+            crude_files.append(label)
         else:
-            for v2 in data1[index + 1:]:
-                cs.append(cosine_similarity([v1], [v2]))
-    average_cs = sum(cs)/len(cs)
-    return average_cs
+            grain_files.append(label)
+
+    return len(crude_files), len(grain_files), len(together)
 
 
-# We run the previous CS function to compute all 4 results: between same topics and between the different ones:
-first_topic_same = CS(vec_1)
-second_topic_same = CS(vec_2)
-first_to_second = CS(vec_1, vec_2)
-second_to_first =CS(vec_2, vec_1)
+def cs_crude(whatever_array, len_crude):
+    """
+    Calculates CS of each vector in topic crude between every vector in crude, averaged over entire topic sub-folder.
+    """
+
+    # Create a list of results, save each CS result.
+    cs_result = []
+    # In order to get different topics, we use slices from the main list (557 docs for grain),
+    # then build dataframe from those slices (from cut_df) and we don't have to analyze
+    # the file, but directly the dataframe:
+    # grain_dataframe = cut_df(slice1)
+    # crude_dataframe = cut_df(slice2)
+    # Then we do nested for loops with the sliced dataframe.
+
+    # Nested loop for CS for the matrix:
+    for index in range(0, len_crude):
+    # Here we get the first vector for getting CS:
+        vector1 = whatever_array[index:index + 1]
+
+        for inner_index in range(0, len_crude):
+        # Here we get vector 2
+            vector2 = whatever_array[inner_index:inner_index + 1]
+        # Now we do CS between vector 1 and vector 2
+            value = cosine_similarity(vector1, vector2, dense_output=True)
+            cs_result.append(value[0][0])
+
+    # Average = the CS values of each comparison divided with the sum of all comparisons.
+    average_cs_crude = sum(cs_result) / len(cs_result)
+    print("Average cosine similarity of topic crude: ")
+    print(average_cs_crude)
+    return average_cs_crude
 
 
 
-# We print all results:
-print("Reading matrix from {}.".format(args.first_vectorfile))
-print("Reading matrix from {}.".format(args.second_vectorfile))
-print("Average cosine similarity within same topic, topic 1: ", first_topic_same)
-print("Average cosine similarity within same topic, topic 2: ", second_topic_same)
-print("Average cosine similarity to other topic (topic 1 to topic 2): ", first_to_second)
-print("Average cosine similarity to other topic (topic 2 to topic 1): ", second_to_first)
+
+def cs_grain(whatever_array, len_grain, total_len):
+    """
+    Same procedure as in the cs_crude function, but here we calculate the CS of each vector in topic grain
+    compared to every vector of topic grain, averaged over the entire topic grain.
+    """
+
+    # Create a list of results, save each CS result.
+    cs_result = []
+    # In order to get different topics, we use slices from the main list (557 docs for grain),
+    # then build dataframe from those slices (from cut_df) and we don't have to analyze
+    # the file, but directly the dataframe:
+    # grain_dataframe = cut_df(slice1)
+    # crude_dataframe = cut_df(slice2)
+
+    # Then we do nested for loops with the sliced dataframe.
+
+    # Nested loop for CS for the matrix:
+    for index in range(len_grain, total_len):
+    # Here we get the first vector for getting CS:
+        vector1 = whatever_array[index:index + 1]
+
+        for inner_index in range(len_grain, total_len):
+        # Here we get vector 2
+            vector2 = whatever_array[inner_index:inner_index + 1]
+        # Now we do CS between vector 1 and vector 2
+            value = cosine_similarity(vector1, vector2, dense_output=True)
+            cs_result.append(value[0][0])
+
+    # Average = the CS values of each comparison divided with the sum of all comparisons.
+    average_cs_grain = sum(cs_result) / len(cs_result)
+    print("Average cosine similarity of topic grain: ")
+    print(average_cs_grain)
+    return average_cs_grain
+
+
+
+
+def cs_crude_to_grain(whatever_array, len_crude, len_grain, total_len):
+    """
+    We compute the average CS of each vector in crude compared to every vector
+    in grain, averaged over the entire topic.
+    """
+    cs_result = []
+
+    for index in range(0, len_crude):
+        vector1 = whatever_array[index:index+1]
+
+        for innerindex in range(len_grain, total_len):
+            vector2 = whatever_array[innerindex:innerindex+1]
+        # Now we do CS between vectors from crude and vectors from grain
+            value = cosine_similarity(vector1, vector2, dense_output=True)
+            cs_result.append(value[0][0])
+
+    average_cs_crude_to_grain = sum(cs_result) / len(cs_result)
+    print("Average cosine similarity of topic crude compared to grain: ")
+    print(average_cs_crude_to_grain)
+    return average_cs_crude_to_grain
+
+
+
+
+
+def cs_grain_to_crude(whatever_array, len_grain, len_crude, total_len):
+    """
+    We compute the average CS of each vector in grain compared to every vector
+    in crude, averaged over the entire topic.
+    """
+    cs_result = []
+
+    for index in range(len_grain, total_len):
+        vector1 = whatever_array[index:index + 1]
+
+        for innerindex in range(0, len_crude):
+            vector2 = whatever_array[innerindex:innerindex + 1]
+            # Now we do CS between vectors from crude and vectors from grain
+            value = cosine_similarity(vector1, vector2, dense_output=True)
+            cs_result.append(value[0][0])
+
+    average_cs_grain_to_crude = sum(cs_result) / len(cs_result)
+    print("Average cosine similarity of topic grain compared to crude: ")
+    print(average_cs_grain_to_crude)
+    return average_cs_grain_to_crude
+
+
+
+
+
+
+
+whatever_array = dataframe_from_file(args.vectorfile)
+len_crude, len_grain, total_len = selecting_input_data(args.vectorfile)
+cs_crude(whatever_array, len_crude)
+cs_grain(whatever_array, len_grain, total_len)
+cs_crude_to_grain(whatever_array, len_crude, len_grain, total_len)
+cs_grain_to_crude(whatever_array, len_crude, len_grain, total_len)
