@@ -120,7 +120,11 @@ def matrix_builder(directory, m=None):
     # matrix_array = np.array(main_vector)
     columns = vocabulary_list(directory, m) # this is a lists with all words
     matrix_dataframe = pd.DataFrame.from_dict(main_vector, orient='index',  dtype=None, columns=columns)
-
+    duplicates_list = matrix_dataframe[matrix_dataframe.duplicated()].index.tolist()
+    matrix_dataframe = matrix_dataframe.drop_duplicates()
+    print("These duplicated vectors have been dropped: ")
+    for duplicate in duplicates_list:
+        print(duplicate)
     return matrix_dataframe, main_vector, columns
 
 
