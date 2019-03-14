@@ -75,12 +75,7 @@ def cs_crude(whatever_array, len_crude):
 
     # Create a list of results, save each CS result.
     cs_result = []
-    # In order to get different topics, we use slices from the main list (557 docs for grain),
-    # then build dataframe from those slices (from cut_df) and we don't have to analyze
-    # the file, but directly the dataframe:
-    # grain_dataframe = cut_df(slice1)
-    # crude_dataframe = cut_df(slice2)
-    # Then we do nested for loops with the sliced dataframe.
+
 
     # Nested loop for CS for the matrix:
     for index in range(0, len_crude):
@@ -108,30 +103,16 @@ def cs_grain(whatever_array, len_grain, total_len):
     Same procedure as in the cs_crude function, but here we calculate the CS of each vector in topic grain
     compared to every vector of topic grain, averaged over the entire topic grain.
     """
-
-    # Create a list of results, save each CS result.
     cs_result = []
-    # In order to get different topics, we use slices from the main list (557 docs for grain),
-    # then build dataframe from those slices (from cut_df) and we don't have to analyze
-    # the file, but directly the dataframe:
-    # grain_dataframe = cut_df(slice1)
-    # crude_dataframe = cut_df(slice2)
-
-    # Then we do nested for loops with the sliced dataframe.
-
-    # Nested loop for CS for the matrix:
+  
     for index in range(len_grain, total_len):
-    # Here we get the first vector for getting CS:
         vector1 = whatever_array[index:index + 1]
 
         for inner_index in range(len_grain, total_len):
-        # Here we get vector 2
             vector2 = whatever_array[inner_index:inner_index + 1]
-        # Now we do CS between vector 1 and vector 2
             value = cosine_similarity(vector1, vector2, dense_output=True)
             cs_result.append(value[0][0])
 
-    # Average = the CS values of each comparison divided with the sum of all comparisons.
     average_cs_grain = sum(cs_result) / len(cs_result)
     print("Average cosine similarity of topic grain: ")
     print(average_cs_grain)
