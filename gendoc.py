@@ -134,18 +134,12 @@ def file_creator(dataframe):
     """
     dataframe.to_csv(args.outputfile, header=True)
     print(dataframe)
+    return dataframe
 
 
 
 
-"""
-Part 2
-"""
-#def cosine_similarity_same_topic():
 
-
-
-#def cosine_similarity_other_topic():
 
 
 #import pdb;pdb.set_trace()
