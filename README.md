@@ -20,8 +20,8 @@ In this assigment we are comparing the similarity among documents in terms of th
 
 
 ### Discussion of trends in results in light of the hypothesis
-
+in progress
 
 ## Bonus answers
 
-(Delete if you're not answering the bonus.)
+in progress
