@@ -2,22 +2,15 @@
 
 From Asad Sayeed's statistical NLP course at the University of Gothenburg.
 
-My name: YOUR NAME HERE
+My name: MIRIAM SANCHEZ ALCON
 
-## Additional instructions
 
-Document here additional command-line instructions or other details you
-want us to know about running your code.
-
-## File naming convention
-
-(Delete this section if it's fairly obvious what output file was
-created with what parameters.)
 
 ## Results and discussion
 
-### Vocabulary restriction.
 
+### Vocabulary restriction.
+Top 50 words.
 (Write what you chose for the vocabulary restriction for output file
 (2), you can give a brief impressionistic justification for why in one
 sentence or less.)
@@ -28,7 +21,9 @@ sentence or less.)
 
 ### The hypothesis in your own words
 
+
 ### Discussion of trends in results in light of the hypothesis
+
 
 ## Bonus answers
 
