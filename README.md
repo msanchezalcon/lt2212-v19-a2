@@ -17,7 +17,7 @@ sentence or less.)
 
 ### Result table
 
-(Try to use the Markdown table format for this.)
+(in a separate pdf file called "result_table.pdf")
 
 ### The hypothesis in your own words
 
